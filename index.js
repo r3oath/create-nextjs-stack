@@ -65,11 +65,11 @@ const performSetup = (answers) => {
 
   const args = ['add'];
 
-  if (answers.uses_contentful) {
+  if (answers.use_contentful) {
     args.push(['contentful']);
   }
 
-  if (answers.uses_tailwind) {
+  if (answers.use_tailwind) {
     args.push([
       'autoprefixer',
       'cssnano',
@@ -88,35 +88,14 @@ const performSetup = (answers) => {
   log(chalk.cyan.bold('[*] Copying over required files based on project configuration...\n'));
 
   fs.copySync(
-    path.resolve(originalDirectory, 'files'),
+    path.resolve(originalDirectory, 'files', 'common'),
     path.resolve(root),
-    {
-      filter(src) {
-        // Skip configuration specific files.
-        return !path.basename(src).startsWith('_');
-      },
-    },
   );
 
-  if (answers.uses_contentful && answers.uses_tailwind) {
+  if (answers.use_tailwind) {
     fs.copySync(
-      path.resolve(originalDirectory, 'files', '_cms_tw_next.config.js'),
-      path.resolve(root, 'next.config.js'),
-    );
-  } else if (answers.uses_contentful) {
-    fs.copySync(
-      path.resolve(originalDirectory, 'files', '_cms_next.config.js'),
-      path.resolve(root, 'next.config.js'),
-    );
-  } else if (answers.uses_tailwind) {
-    fs.copySync(
-      path.resolve(originalDirectory, 'files', '_tw_next.config.js'),
-      path.resolve(root, 'next.config.js'),
-    );
-  } else {
-    fs.copySync(
-      path.resolve(originalDirectory, 'files', '_next.config.js'),
-      path.resolve(root, 'next.config.js'),
+      path.resolve(originalDirectory, 'files', 'tailwind'),
+      path.resolve(root),
     );
   }
 };
@@ -146,12 +125,12 @@ inquirer
     },
     {
       type: 'confirm',
-      name: 'uses_contentful',
+      name: 'use_contentful',
       message: () => 'Will this project be using Contentful?',
     },
     {
       type: 'confirm',
-      name: 'uses_tailwind',
+      name: 'use_tailwind',
       message: () => 'Will this project be using Tailwind CSS?',
     },
   ])

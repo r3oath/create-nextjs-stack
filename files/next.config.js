@@ -10,16 +10,16 @@ const EXPOSED_ENVS = [
 
 dotenv.config();
 
-module.exports = withCSS({
+const nextConfig = {
   webpack: (config) => {
     const customConfig = { ...config };
-
     customConfig.resolve.alias = { ...config.resolve.alias, '@app': __dirname };
-
     return customConfig;
   },
   env: EXPOSED_ENVS.reduce((obj, env) => ({
     ...obj,
     [env]: process.env[env],
   }), {}),
-});
+};
+
+module.exports = withCSS(nextConfig);
