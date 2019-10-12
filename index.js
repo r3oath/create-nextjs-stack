@@ -230,6 +230,30 @@ const performSetup = (answers) => {
       },
     );
   }
+
+  log(chalk.green.bold(`
+██████╗ ███████╗ █████╗ ██████╗ ██╗   ██╗██╗
+██╔══██╗██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝██║
+██████╔╝█████╗  ███████║██║  ██║ ╚████╔╝ ██║
+██╔══██╗██╔══╝  ██╔══██║██║  ██║  ╚██╔╝  ╚═╝
+██║  ██║███████╗██║  ██║██████╔╝   ██║   ██╗
+╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝   ╚═╝
+  `));
+
+  log('Move into your project directory\n');
+  log(chalk.magenta.bold(`cd ${answers.project_slug}`));
+
+  if (answers.use_contentful) {
+    log('\nUpdate the following environment variables in your .env file');
+    log(chalk.magenta.bold(`
+CONTENTFUL_HOST_URL
+CONTENTFUL_SPACE_ID
+CONTENTFUL_API_KEY
+    `));
+  }
+
+  log('And start the application 🚀\n');
+  log(chalk.magenta.bold('npm run dev'));
 };
 
 inquirer
