@@ -1,7 +1,7 @@
 /* eslint react/jsx-props-no-spreading: 0 */
 import React from 'react';
 import App from 'next/app';
-import '@app/public/app.css';
+{% if tailwind %}import '@app/public/app.css';{% endif %}
 import ProgressBar from '@app/services/ProgressBar';
 
 class MyApp extends App {

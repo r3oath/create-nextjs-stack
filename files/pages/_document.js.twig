@@ -12,10 +12,13 @@ class MyDocument extends Document {
   render() {
     return (
       <Html lang="en">
-        <Head />
 {% if tailwind %}
+        <Head />
         <body className="antialiased bg-gray-100 text-gray-900">
 {% else %}
+        <Head>
+          <link rel="stylesheet" href="/app.css"/>
+        </Head>
         <body>
 {% endif %}
           <Main />

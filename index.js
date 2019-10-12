@@ -115,11 +115,6 @@ const performSetup = (answers) => {
     );
   }
 
-  fs.copySync(
-    path.resolve(originalDirectory, 'files', 'pages', '_app.js'),
-    path.resolve(root, 'pages', '_app.js'),
-  );
-
   if (answers.use_tailwind) {
     fs.copySync(
       path.resolve(originalDirectory, 'files', 'tailwind'),
@@ -165,6 +160,19 @@ const performSetup = (answers) => {
       }
 
       fs.outputFileSync(path.resolve(root, 'public', 'app.css'), output);
+    },
+  );
+
+  Twig.renderFile(
+    path.resolve(originalDirectory, 'files', 'pages', '_app.js.twig'),
+    twigProps,
+    (err, output) => {
+      if (err) {
+        log(chalk.red.bold(err));
+        process.exit(1);
+      }
+
+      fs.outputFileSync(path.resolve(root, 'pages', '_app.js'), output);
     },
   );
 
