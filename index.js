@@ -7,7 +7,7 @@ const path = require('path');
 const os = require('os');
 const spawn = require('cross-spawn');
 
-const log = console.log;
+const { log } = console;
 
 log(chalk.green.bold(`
 ███╗   ██╗███████╗██╗  ██╗████████╗     ██╗███████╗
@@ -35,7 +35,7 @@ const BASE_PACKAGES = [
   'eslint-plugin-react',
   'eslint-plugin-react-hooks',
   'prop-types',
-  'nprogress'
+  'nprogress',
 ];
 
 const performSetup = (answers) => {
@@ -52,18 +52,18 @@ const performSetup = (answers) => {
       dev: 'next',
       build: 'next build',
       start: 'next start',
-      lint: 'eslint \"**/*.js\"',
+      lint: 'eslint "**/*.js"',
     },
   };
 
   fs.writeFileSync(
     path.join(root, 'package.json'),
-    JSON.stringify(packageJson, null, 2) + os.EOL
+    JSON.stringify(packageJson, null, 2) + os.EOL,
   );
 
   process.chdir(root);
 
-  let args = ['add'];
+  const args = ['add'];
 
   if (answers.uses_contentful) {
     args.push(['contentful']);
@@ -75,7 +75,7 @@ const performSetup = (answers) => {
       'cssnano',
       'tailwindcss',
       '@zeit/next-css',
-      '@fullhuman/postcss-purgecss'
+      '@fullhuman/postcss-purgecss',
     ]);
   }
 
@@ -85,17 +85,40 @@ const performSetup = (answers) => {
 
   spawn.sync('npm', args.flat(), { stdio: 'inherit' });
 
-  log(chalk.cyan.bold('\n[*] Copying over required files based on project configuration...\n'));
+  log(chalk.cyan.bold('[*] Copying over required files based on project configuration...\n'));
 
   fs.copySync(
     path.resolve(originalDirectory, 'files'),
     path.resolve(root),
     {
       filter(src) {
-        return !src.startsWith('_');
+        // Skip configuration specific files.
+        return !path.basename(src).startsWith('_');
       },
-    }
+    },
   );
+
+  if (answers.uses_contentful && answers.uses_tailwind) {
+    fs.copySync(
+      path.resolve(originalDirectory, 'files', '_cms_tw_next.config.js'),
+      path.resolve(root, 'next.config.js'),
+    );
+  } else if (answers.uses_contentful) {
+    fs.copySync(
+      path.resolve(originalDirectory, 'files', '_cms_next.config.js'),
+      path.resolve(root, 'next.config.js'),
+    );
+  } else if (answers.uses_tailwind) {
+    fs.copySync(
+      path.resolve(originalDirectory, 'files', '_tw_next.config.js'),
+      path.resolve(root, 'next.config.js'),
+    );
+  } else {
+    fs.copySync(
+      path.resolve(originalDirectory, 'files', '_next.config.js'),
+      path.resolve(root, 'next.config.js'),
+    );
+  }
 };
 
 inquirer
@@ -104,19 +127,15 @@ inquirer
       type: 'input',
       name: 'project_name',
       message: () => 'What is the application name (e.g.: Swedish Elk)?',
-      validate: (name) => {
-        return name.length > 0 ? true : 'Please provide a valid project name';
-      },
+      validate: (name) => (name.length > 0 ? true : 'Please provide a valid project name'),
     },
     {
       type: 'input',
       name: 'project_slug',
       message: () => 'What should the package name be?',
-      default: (answers) => {
-        return slug(answers.project_name, { lower: true });
-      },
-      validate: (slug) => {
-        const { validForNewPackages } = validatePackageName(slug);
+      default: (answers) => slug(answers.project_name, { lower: true }),
+      validate: (projectSlug) => {
+        const { validForNewPackages } = validatePackageName(projectSlug);
 
         if (!validForNewPackages) {
           return 'Please provide a valid package name';
@@ -128,12 +147,12 @@ inquirer
     {
       type: 'confirm',
       name: 'uses_contentful',
-      message: () => 'Will this project be using Contentful?'
+      message: () => 'Will this project be using Contentful?',
     },
     {
       type: 'confirm',
       name: 'uses_tailwind',
-      message: () => 'Will this project be using Tailwind CSS?'
+      message: () => 'Will this project be using Tailwind CSS?',
     },
   ])
   .then(performSetup);
