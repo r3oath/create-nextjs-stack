@@ -1,5 +1,5 @@
 {
-  "name": "create-nextjs-stack",
+  "name": "@tidbits/create-nextjs-stack",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
