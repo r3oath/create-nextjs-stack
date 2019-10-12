@@ -1,0 +1,19 @@
+import React from 'react';
+import { Meta } from '@app/services/index';
+
+const Index = () => (
+  <Meta details={{ '{{' }} title: ['Welcome'], description: 'Create Next.js Stack' {{ '}}' }}>
+    <div className="flex items-center justify-center h-screen">
+      <div className="text-center">
+        <h1 className="font-black tracking-wider text-5xl uppercase">{{ name }}</h1>
+        <em className="text-lg">
+          Built by Create Next.js Stack
+          {' '}
+          <span role="img" aria-label="shaka">🤙</span>
+        </em>
+      </div>
+    </div>
+  </Meta>
+);
+
+export default Index;

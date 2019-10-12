@@ -23,6 +23,7 @@
     "inquirer": "^7.0.0",
     "os": "^0.1.1",
     "slug": "^1.1.0",
+    "twig": "^1.13.3",
     "validate-npm-package-name": "^3.0.0"
   }
 }

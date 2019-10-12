@@ -1,0 +1,16 @@
+{
+  "version": 2,
+  "name": "{{ slug }}",
+  "scope": "{{ slug }}",
+  "regions": ["syd"],
+  "build": {
+    "env": {
+      "APP_NAME": "@{{ slug }}_app_name",
+{% if contentful %}
+      "CONTENTFUL_HOST_URL": "@{{ slug }}_contentful_host_url",
+      "CONTENTFUL_SPACE_ID": "@{{ slug }}_contentful_space_id",
+      "CONTENTFUL_API_KEY": "@{{ slug }}_contentful_api_key"
+{% endif %}
+    }
+  }
+}

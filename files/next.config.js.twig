@@ -1,11 +1,15 @@
 const dotenv = require('dotenv');
+{% if tailwind %}
 const withCSS = require('@zeit/next-css');
+{% endif %}
 
 const EXPOSED_ENVS = [
   'APP_NAME',
+{% if contentful %}
   'CONTENTFUL_HOST_URL',
   'CONTENTFUL_SPACE_ID',
   'CONTENTFUL_API_KEY',
+{% endif %}
 ];
 
 dotenv.config();
@@ -22,4 +26,8 @@ const nextConfig = {
   }), {}),
 };
 
+{% if tailwind %}
 module.exports = withCSS(nextConfig);
+{% else %}
+module.exports = nextConfig;
+{% endif %}
